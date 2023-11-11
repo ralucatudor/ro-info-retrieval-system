@@ -1,5 +1,3 @@
-import static java.util.Map.entry;
-
 import org.apache.lucene.analysis.*;
 import org.apache.lucene.analysis.ro.RomanianAnalyzer;
 import org.apache.lucene.analysis.snowball.SnowballFilter;
@@ -10,14 +8,20 @@ import org.tartarus.snowball.ext.RomanianStemmer;
 import java.io.IOException;
 import java.util.Map;
 
+import static java.util.Map.entry;
+
 final class DiacriticsFilter extends TokenFilter {
-    CharTermAttribute charTermAttribute;
     private final Map<Character, Character> DIACRITICS_TO_PLAIN_LETTER =
             Map.ofEntries(
-                    entry('ă','a'),
-    entry('â','a'), entry('î','i'), entry('ș','s'),  entry('ş','s'),
-                    entry('ţ', 't'), entry('ț', 't')
+                    entry('ă', 'a' ),
+                    entry('â', 'a' ),
+                    entry('î', 'i' ),
+                    entry('ș', 's' ),
+                    entry('ş', 's' ),
+                    entry('ţ', 't' ),
+                    entry('ț', 't' )
             );
+    CharTermAttribute charTermAttribute;
 
     protected DiacriticsFilter(TokenStream input) {
         super(input);
@@ -57,7 +61,7 @@ public class RoAnalyzer extends Analyzer {
     protected TokenStreamComponents createComponents(String fieldName) {
         StandardTokenizer src = new StandardTokenizer();
         TokenStream result = new LowerCaseFilter(src);
-        result = new StopFilter(result,  RomanianAnalyzer.getDefaultStopSet());
+        result = new StopFilter(result, RomanianAnalyzer.getDefaultStopSet());
         result = new SnowballFilter(result, new RomanianStemmer());
         result = new DiacriticsFilter(result);
         return new TokenStreamComponents(src, result);
