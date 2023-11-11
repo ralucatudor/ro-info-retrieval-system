@@ -12,11 +12,11 @@ import java.nio.file.Paths;
 
 public class RoSearcher {
     private static final String FIELD_FROM_INDEX = "content";
+    private static final String DEFAULT_QUERY = "incredere";
 
     public static void main(String[] args) throws IOException, ParseException {
         // Specify the directory where the index is stored
-        String indexPath = "index";
-        Directory indexDir = FSDirectory.open(Paths.get(indexPath));
+        Directory indexDir = FSDirectory.open(Paths.get(RoIndexer.INDEX_PATH));
 
         // Create an analyzer to process the query
         Analyzer analyzer = new RoAnalyzer();
@@ -33,14 +33,14 @@ public class RoSearcher {
 
         // Execute the query and get the results
         // 2. query
-        String querystr = args.length > 0 ? args[0] : "incredere";
+        String queryString = args.length > 0 ? args[0] : DEFAULT_QUERY;
 
         // the "title" arg specifies the default field to use
         // when no field is explicitly specified in the query.
-        Query q = queryParser.parse(querystr);
+        Query query = queryParser.parse(queryString);
 
         int hitsPerPage = 10;
-        TopDocs topDocs = searcher.search(q, hitsPerPage);
+        TopDocs topDocs = searcher.search(query, hitsPerPage);
 //        hits
         ScoreDoc[] scoreDocs = topDocs.scoreDocs;
 
