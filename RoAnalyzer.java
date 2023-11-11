@@ -11,7 +11,7 @@ import java.util.Map;
 import static java.util.Map.entry;
 
 final class DiacriticsFilter extends TokenFilter {
-    private final Map<Character, Character> DIACRITICS_TO_PLAIN_LETTER =
+    private static final Map<Character, Character> DIACRITICS_TO_PLAIN_LETTER =
             Map.ofEntries(
                     entry('ă', 'a' ),
                     entry('â', 'a' ),
@@ -21,7 +21,7 @@ final class DiacriticsFilter extends TokenFilter {
                     entry('ţ', 't' ),
                     entry('ț', 't' )
             );
-    CharTermAttribute charTermAttribute;
+    private final CharTermAttribute charTermAttribute;
 
     protected DiacriticsFilter(TokenStream input) {
         super(input);
@@ -31,8 +31,10 @@ final class DiacriticsFilter extends TokenFilter {
     @Override
     public boolean incrementToken() throws IOException {
         if (!input.incrementToken()) {
+            // There is no value available in the token stream for processing.
             return false;
         }
+        // Token stream should be further analyzed: remove diacritics.
 
         char[] buffer = charTermAttribute.buffer();
         char[] newBuffer = removeDiacritics(buffer);

@@ -1,5 +1,3 @@
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.IndexWriter;
@@ -22,7 +20,6 @@ import java.nio.file.Paths;
  * Handles creating inverted index from a set of documents in Romanian.
  */
 public class RoIndexer {
-    private static final Logger LOG = LogManager.getLogger(RoIndexer.class);
 
     public static void main(String[] args) throws IOException, TikaException, SAXException {
         // Specify the directory to store the index
@@ -44,8 +41,7 @@ public class RoIndexer {
         File[] files = folder.listFiles();
         for (File file : files) {
             if (file.isFile()) {
-                LOG.info("Processing next document");
-                System.out.printf("process");
+                System.out.println("Processing file " + file.getName() + " and adding it to the index.");
                 Document doc = new Document();
                 // Add the filename field - using string field since we don't want this to be tokenized
                 doc.add(new StringField("filename", file.getName(), Field.Store.YES));
