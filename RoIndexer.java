@@ -21,6 +21,8 @@ import java.nio.file.Paths;
 
 /**
  * Handles creating inverted index from a set of documents in Romanian.
+ *
+ * author: Raluca Tudor
  */
 public class RoIndexer {
     static final String INDEX_PATH = "index";
@@ -34,35 +36,34 @@ public class RoIndexer {
         // Specify the directory to store the index
         Directory indexDir = FSDirectory.open(Paths.get(INDEX_PATH));
 
-        // Create an analyzer to process the documents
+        // Use the custom Romanian Analyzer to process the documents.
         Analyzer analyzer = new RoAnalyzer();
 
-        // Create an index writer to write the index
         IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
-//        create or append?
         indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+        // If the user wishes to not fully reindex, then use CREATE_OR_APPEND open mode.
+        // indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 
-        IndexWriter writer = new IndexWriter(indexDir, indexWriterConfig);
+        IndexWriter indexWriter = new IndexWriter(indexDir, indexWriterConfig);
 
         // Read the documents and add them to the index
-        String pathString = args.length > 0 ? args[0] : DEFAULT_DOCS_DIR_PATH_STR;
-        File folder = new File(pathString);
-        File[] files = folder.listFiles();
+        String docsDirPathString = args.length > 0 ? args[0] : DEFAULT_DOCS_DIR_PATH_STR;
 
-        if (files == null) {
+        File[] filesForIndexing = new File(docsDirPathString).listFiles();
+        if (filesForIndexing == null) {
             System.out.println("There are no files to index");
             return;
         }
 
-        for (File file : files) {
+        for (File file : filesForIndexing) {
             if (file.isFile()) {
                 System.out.println("Processing file " + file.getName() + " and adding it to the index.");
-                writer.addDocument(createAndParseDocumentFrom(file));
+                indexWriter.addDocument(createAndParseDocumentFrom(file));
             }
         }
 
-        // Close the index writer to save the index
-        writer.close();
+        // Close the index writer to save the index.
+        indexWriter.close();
     }
 
     static Document createAndParseDocumentFrom(File file) throws IOException, TikaException, SAXException {

@@ -10,6 +10,24 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 
+/**
+ * Custom Romanian Analyzer for processing the documents.
+ *
+ * author: Raluca Tudor
+ */
+public class RoAnalyzer extends Analyzer {
+
+    @Override
+    protected TokenStreamComponents createComponents(String fieldName) {
+        StandardTokenizer src = new StandardTokenizer();
+        TokenStream result = new LowerCaseFilter(src);
+        result = new StopFilter(result, RomanianAnalyzer.getDefaultStopSet());
+        result = new SnowballFilter(result, new RomanianStemmer());
+        result = new DiacriticsFilter(result);
+        return new TokenStreamComponents(src, result);
+    }
+}
+
 final class DiacriticsFilter extends TokenFilter {
     private static final Map<Character, Character> DIACRITICS_TO_PLAIN_LETTER =
             Map.ofEntries(
@@ -54,18 +72,5 @@ final class DiacriticsFilter extends TokenFilter {
             }
         }
         return newBuffer;
-    }
-}
-
-public class RoAnalyzer extends Analyzer {
-
-    @Override
-    protected TokenStreamComponents createComponents(String fieldName) {
-        StandardTokenizer src = new StandardTokenizer();
-        TokenStream result = new LowerCaseFilter(src);
-        result = new StopFilter(result, RomanianAnalyzer.getDefaultStopSet());
-        result = new SnowballFilter(result, new RomanianStemmer());
-        result = new DiacriticsFilter(result);
-        return new TokenStreamComponents(src, result);
     }
 }
