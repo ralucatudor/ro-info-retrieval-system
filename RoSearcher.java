@@ -21,7 +21,7 @@ public class RoSearcher {
         Directory indexDir = FSDirectory.open(Paths.get(indexPath));
 
         // Create an analyzer to process the query
-        Analyzer analyzer = new StandardAnalyzer();
+        Analyzer analyzer = new RoAnalyzer();
 
         // Create a searcher to search the index
         IndexReader reader = DirectoryReader.open(indexDir);
@@ -35,7 +35,7 @@ public class RoSearcher {
 
         // Execute the query and get the results
         // 2. query
-        String querystr = args.length > 0 ? args[0] : "ghearele ursului";
+        String querystr = args.length > 0 ? args[0] : "incredere";
 
         // the "title" arg specifies the default field to use
         // when no field is explicitly specified in the query.

@@ -31,7 +31,7 @@ public class RoIndexer {
         Directory indexDir = FSDirectory.open(Paths.get(indexPath));
 
         // Create an analyzer to process the documents
-        Analyzer analyzer = new StandardAnalyzer();
+        Analyzer analyzer = new RoAnalyzer();
 
         // Create an index writer to write the index
         IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
