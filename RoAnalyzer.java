@@ -13,13 +13,13 @@ import static java.util.Map.entry;
 final class DiacriticsFilter extends TokenFilter {
     private static final Map<Character, Character> DIACRITICS_TO_PLAIN_LETTER =
             Map.ofEntries(
-                    entry('ă', 'a' ),
-                    entry('â', 'a' ),
-                    entry('î', 'i' ),
-                    entry('ș', 's' ),
-                    entry('ş', 's' ),
-                    entry('ţ', 't' ),
-                    entry('ț', 't' )
+                    entry('ă', 'a'),
+                    entry('â', 'a'),
+                    entry('î', 'i'),
+                    entry('ș', 's'),
+                    entry('ş', 's'),
+                    entry('ţ', 't'),
+                    entry('ț', 't')
             );
     private final CharTermAttribute charTermAttribute;
 

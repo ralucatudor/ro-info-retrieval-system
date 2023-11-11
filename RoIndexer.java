@@ -1,5 +1,8 @@
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.document.*;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
@@ -13,7 +16,6 @@ import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -23,7 +25,9 @@ import java.nio.file.Paths;
 public class RoIndexer {
     static final String INDEX_PATH = "index";
 
-    /** Default path for the directory holding the documents to be indexed. */
+    /**
+     * Default path for the directory holding the documents to be indexed.
+     */
     private static final String DEFAULT_DOCS_DIR_PATH_STR = "resources";
 
     public static void main(String[] args) throws IOException, TikaException, SAXException {
