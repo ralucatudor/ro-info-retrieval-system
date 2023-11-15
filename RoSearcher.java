@@ -20,18 +20,18 @@ import java.nio.file.Paths;
  * author: Raluca Tudor
  */
 public class RoSearcher {
-    private static final String FIELD_FROM_INDEX = "content";
     private static final String DEFAULT_QUERY = "incredere";
 
     public static void main(String[] args) throws IOException, ParseException {
         // Use the same directory as the Ro Indexer. This is where the index was stored.
         Directory indexDir = FSDirectory.open(Paths.get(RoIndexer.INDEX_PATH));
 
-        // Use the custom Romanian Analyzer to process the query.
+        // Use the custom Romanian Analyzer {@link RoAnalyzer} to process the query.
         Analyzer analyzer = new RoAnalyzer();
 
         String queryString = args.length > 0 ? args[0] : DEFAULT_QUERY;
-        QueryParser queryParser = new QueryParser(FIELD_FROM_INDEX, analyzer);
+        // Parse correspondingly to the text field name used when indexing the docs.
+        QueryParser queryParser = new QueryParser(RoIndexer.DOC_TEXT_FIELD_NAME, analyzer);
         Query query = queryParser.parse(queryString);
 
         int hitsPerPage = 10;
@@ -41,7 +41,7 @@ public class RoSearcher {
         TopDocs topDocs = searcher.search(query, hitsPerPage);
         ScoreDoc[] scoreDocs = topDocs.scoreDocs;
 
-        // Display the results.
+        // Display the results found.
         System.out.println("Found " + scoreDocs.length + " hits.");
         for (ScoreDoc scoreDoc : scoreDocs) {
             int docID = scoreDoc.doc;
@@ -50,7 +50,7 @@ public class RoSearcher {
             System.out.println("Score: " + scoreDoc.score);
         }
 
-        // Close the reader to release resources.
+        // Close the index reader to release resources.
         indexReader.close();
     }
 }

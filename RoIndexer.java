@@ -26,6 +26,7 @@ import java.nio.file.Paths;
  */
 public class RoIndexer {
     static final String INDEX_PATH = "index";
+    static final String DOC_TEXT_FIELD_NAME = "content";
 
     /**
      * Default path for the directory holding the documents to be indexed.
@@ -36,12 +37,12 @@ public class RoIndexer {
         // Specify the directory to store the index
         Directory indexDir = FSDirectory.open(Paths.get(INDEX_PATH));
 
-        // Use the custom Romanian Analyzer to process the documents.
+        // Use the custom Romanian Analyzer {@link RoAnalyzer} to process the documents.
         Analyzer analyzer = new RoAnalyzer();
 
         IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
         indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
-        // If the user wishes to not fully reindex, then use CREATE_OR_APPEND open mode.
+        // If the user wishes to not fully reindex, then use {@code CREATE_OR_APPEND} open mode.
         // indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 
         IndexWriter indexWriter = new IndexWriter(indexDir, indexWriterConfig);
@@ -68,10 +69,10 @@ public class RoIndexer {
 
     static Document createAndParseDocumentFrom(File file) throws IOException, TikaException, SAXException {
         Document doc = new Document();
-        // Add the filename field - using string field since we don't want this to be tokenized
+        // Add the filename field - using {@code StringField} since we don't want this to be tokenized
         doc.add(new StringField("filename", file.getName(), Field.Store.YES));
 
-        // Extract the text content from the document using Apache Tika
+        // Extract the text content from the doc using Tika.
         AutoDetectParser parser = new AutoDetectParser();
         BodyContentHandler handler = new BodyContentHandler();
         Metadata metadata = new Metadata();
@@ -80,7 +81,7 @@ public class RoIndexer {
         parser.parse(new FileInputStream(file), handler, metadata, context);
 
         // Add the content field
-        doc.add(new TextField("content", handler.toString(), Field.Store.YES));
+        doc.add(new TextField(DOC_TEXT_FIELD_NAME, handler.toString(), Field.Store.YES));
         return doc;
     }
 }
