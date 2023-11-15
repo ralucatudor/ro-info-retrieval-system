@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 
 /**
  * Handles searching a query within a previously-created inverted index.
- *
+ * <p>
  * author: Raluca Tudor
  */
 public class RoSearcher {
