@@ -21,8 +21,8 @@ import java.nio.file.Paths;
 
 /**
  * Handles creating inverted index from a set of documents in Romanian.
- * <p>
- * author: Raluca Tudor
+ *
+ * @author: Raluca Tudor
  */
 public class RoIndexer {
     static final String INDEX_PATH = "index";

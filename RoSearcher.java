@@ -16,11 +16,12 @@ import java.nio.file.Paths;
 
 /**
  * Handles searching a query within a previously-created inverted index.
- * <p>
- * author: Raluca Tudor
+ *
+ * @author: Raluca Tudor
  */
 public class RoSearcher {
     private static final String DEFAULT_QUERY = "incredere";
+    private static final int TOP_N_HITS = 10;
 
     public static void main(String[] args) throws IOException, ParseException {
         // Use the same directory as the Ro Indexer. This is where the index was stored.
@@ -34,11 +35,11 @@ public class RoSearcher {
         QueryParser queryParser = new QueryParser(RoIndexer.DOC_TEXT_FIELD_NAME, analyzer);
         Query query = queryParser.parse(queryString);
 
-        int hitsPerPage = 10;
         // Create a searcher to search the index.
         IndexReader indexReader = DirectoryReader.open(indexDir);
         IndexSearcher searcher = new IndexSearcher(indexReader);
-        TopDocs topDocs = searcher.search(query, hitsPerPage);
+        // Collect the top {@code TOP_N_HITS} number of scoring hits.
+        TopDocs topDocs = searcher.search(query, TOP_N_HITS);
         ScoreDoc[] scoreDocs = topDocs.scoreDocs;
 
         // Display the results found.

@@ -12,8 +12,8 @@ import static java.util.Map.entry;
 
 /**
  * Custom Romanian Analyzer for processing the documents.
- * <p>
- * author: Raluca Tudor
+ *
+ * @author: Raluca Tudor
  */
 public class RoAnalyzer extends Analyzer {
 
